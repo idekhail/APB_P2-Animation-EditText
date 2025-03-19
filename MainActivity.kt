@@ -1,6 +1,7 @@
 package com.apb.apb_p2
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,8 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
+
 class MainActivity : AppCompatActivity() {
-    private lateinit var username: EditText  // Globale Variable - Field
+
+    lateinit var username: EditText  // Globale Variable - Field
+    lateinit var show: TextView  // Globale Variable - Field
+    lateinit var ok: Button  // Globale Variable - Field
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,27 +32,43 @@ class MainActivity : AppCompatActivity() {
         }
 
         username = findViewById(R.id.username)
-        var ok = findViewById<Button>(R.id.ok)
-        var show = findViewById<TextView>(R.id.show)
+        ok = findViewById(R.id.ok)
+        show = findViewById(R.id.show)
 
-        ok.setOnClickListener {
-            show.text = username.text.toString()
-        }
-
-        createAnimationZoom(this, R.anim.zoom_animation)
-
+        createAnimationEditText(this, R.anim.zoom_in)
+        createAnimationTextView(this, R.anim.blink_animation)
+        createAnimationButton(R.anim.slide_animation)
     }
-    private fun createAnimationZoom(c: Context, animationZoomId: Int) {
+    private fun createAnimationEditText(context: Context, animationZoomId: Int) {
         username.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val animation = AnimationUtils.loadAnimation(c, animationZoomId)
+                val animation = AnimationUtils.loadAnimation(context, animationZoomId)
                 username.startAnimation(animation)
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+    }
+    private fun createAnimationButton(animationZoomId: Int) {
+        ok.setOnClickListener {
+            // Load the animation from the specified resource ID
+            val animation = AnimationUtils.loadAnimation(this, animationZoomId)
+            // Start the animation on the ImageView
+            ok.startAnimation(animation)
+            show.text = username.text.toString()
+        }
+    }
+    private fun createAnimationTextView(context: Context, animationZoomId: Int) {
+        show.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                val animation = AnimationUtils.loadAnimation(context, animationZoomId)
+                show.startAnimation(animation)
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
     }
